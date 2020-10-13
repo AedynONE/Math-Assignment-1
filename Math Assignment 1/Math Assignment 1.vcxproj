@@ -139,11 +139,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="JellyPlatforms.cpp" />
+    <ClCompile Include="JSON.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="mainMenu.cpp" />
     <ClCompile Include="Player.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="JellyPlatforms.h" />
+    <ClInclude Include="JSON.h" />
     <ClInclude Include="Main.h" />
     <ClInclude Include="Player.h" />
   </ItemGroup>
