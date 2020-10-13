@@ -159,7 +159,7 @@
     <ClInclude Include="include\imgui\imstb_textedit.h" />
     <ClInclude Include="include\imgui\imstb_truetype.h" />
     <ClInclude Include="Input.h" />
-    <ClInclude Include="Jelly Platforms.h" />
+    <ClInclude Include="JellyPlatforms.h" />
     <ClInclude Include="JSON.h" />
     <ClInclude Include="MainEntities.h" />
     <ClInclude Include="Matrix.h" />
@@ -212,7 +212,7 @@
     <ClCompile Include="include\imgui\imgui_impl.cpp" />
     <ClCompile Include="include\imgui\imgui_widgets.cpp" />
     <ClCompile Include="Input.cpp" />
-    <ClCompile Include="Jelly Platforms.cpp" />
+    <ClCompile Include="JellyPlatforms.cpp" />
     <ClCompile Include="JSON.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MainEntities.cpp" />

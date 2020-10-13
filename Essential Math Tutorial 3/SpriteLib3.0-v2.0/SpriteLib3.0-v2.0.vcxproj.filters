@@ -174,7 +174,7 @@
     <ClInclude Include="PhysicsPlayground.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Jelly Platforms.h">
+    <ClInclude Include="JellyPlatforms.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -329,7 +329,7 @@
     <ClCompile Include="PhysicsPlayground.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Jelly Platforms.cpp">
+    <ClCompile Include="JellyPlatforms.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
