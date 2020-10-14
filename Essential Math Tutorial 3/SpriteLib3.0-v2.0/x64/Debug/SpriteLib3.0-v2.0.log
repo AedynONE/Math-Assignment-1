@@ -1,3 +1,0 @@
-﻿C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Microsoft\VC\v160\Microsoft.CppBuild.targets(491,5): warning MSB8028: The intermediate directory (x64\Debug\) contains files shared from another project (SpriteLib3.0-v2.0.vcxproj).  This can lead to incorrect clean and rebuild behavior.
-  Game.cpp
-  SpriteLib3.0-v2.0.vcxproj -> F:\OTU\Math\Math Assignment 1\Essential Math Tutorial 3\x64\Debug\Jelly Platforms.exe
