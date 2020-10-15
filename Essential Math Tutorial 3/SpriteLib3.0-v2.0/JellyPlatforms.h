@@ -9,6 +9,8 @@ public:
 
 	void InitScene(float windowWidth, float windowHeight) override;
 
+	void MovingPlatform(float pos1, float y);
+
 	void Update() override;
 
 	//Input overrides
@@ -19,5 +21,6 @@ public:
 protected:
 	bool onGround = false;
 	bool canJump = false;
-
+	int platform = 0;
+	bool movingRight = true;
 };

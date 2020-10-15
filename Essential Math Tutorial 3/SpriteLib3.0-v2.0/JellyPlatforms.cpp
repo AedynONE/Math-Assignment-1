@@ -8,6 +8,40 @@ JellyPlatforms::JellyPlatforms(std::string name)
 	m_physicsWorld->SetGravity(m_gravity);
 }
 
+void JellyPlatforms::MovingPlatform(float pos1, float y)
+{
+	float newX = 1;
+
+	//creates entity
+	auto entity = ECS::CreateEntity();
+
+	//add components
+	ECS::AttachComponent<Sprite>(entity);
+	ECS::AttachComponent<Transform>(entity);
+	ECS::AttachComponent<PhysicsBody>(entity);
+
+	//sets up components
+	std::string fileName = "boxSprite.jpg";
+	ECS::GetComponent<Sprite>(entity).LoadSprite(fileName, 50, 10);
+	ECS::GetComponent<Transform>(entity).SetPosition(vec3(pos1, y, 2.f));
+
+	auto& tempSpr = ECS::GetComponent<Sprite>(entity);
+	auto& tempPhysBody = ECS::GetComponent<PhysicsBody>(entity);
+
+	float shrinkX = 0.f;
+	float shrinkY = 0.f;
+	b2Body* tempBody;
+	b2BodyDef tempDef;
+	tempDef.type = b2_staticBody;
+	tempDef.position.Set(float32(pos1), float32(y));
+
+	tempBody = m_physicsWorld->CreateBody(&tempDef);
+
+	tempPhysBody = PhysicsBody(tempBody, float(tempSpr.GetWidth() - shrinkX), float(tempSpr.GetHeight() - shrinkY), vec2(0.f, 0.f), false);
+
+	platform = entity;
+}
+
 void JellyPlatforms::InitScene(float windowWidth, float windowHeight)
 {
 	m_sceneReg = new entt::registry;
@@ -117,6 +151,8 @@ void JellyPlatforms::InitScene(float windowWidth, float windowHeight)
 		tempPhysBody = PhysicsBody(tempBody, float(tempSpr.GetWidth() - shrinkX), float(tempSpr.GetHeight() - shrinkY), vec2(0.f, 0.f), false);
 	}
 
+	MovingPlatform(1, 1);
+
 	//setup static box
 	{
 		//creates entity
@@ -155,15 +191,41 @@ void JellyPlatforms::InitScene(float windowWidth, float windowHeight)
 
 void JellyPlatforms::Update()
 {
+	float pos1 = 100;
+	float pos2 = -100;
+	float speed = 10;
+
 	auto& player = ECS::GetComponent<Player>(MainEntities::MainPlayer());
 	Scene::AdjustScrollOffset();
 	player.Update();
+
+	if (movingRight)
+	{
+		b2Vec2 newPos = (ECS::GetComponent<PhysicsBody>(platform).GetPosition() + b2Vec2(speed * Timer::deltaTime, 0.f));
+		ECS::GetComponent<PhysicsBody>(platform).GetBody()->SetTransform(newPos, 0);
+
+		if (ECS::GetComponent<Transform>(platform).GetPositionX() >= pos1)
+		{
+			movingRight = false;
+		}
+	}
+	else
+	{
+		b2Vec2 newPos = (ECS::GetComponent<PhysicsBody>(platform).GetPosition() - b2Vec2(speed * Timer::deltaTime, 0.f));
+		ECS::GetComponent<PhysicsBody>(platform).GetBody()->SetTransform(newPos, 0);
+
+		if (ECS::GetComponent<Transform>(platform).GetPositionX() <= pos2)
+		{
+			movingRight = true;
+		}
+	}
+
 }
 
 void JellyPlatforms::KeyboardHold()
 {
 	auto& player = ECS::GetComponent<PhysicsBody>(MainEntities::MainPlayer());
-	float speed = 7.f;
+	float speed = 500.f;
 	b2Vec2 vel = b2Vec2(0.f, 0.f);
 	//b2Vec2 vel = player.GetBody()->GetLinearVelocity();	//b2Vec2(0.f, 0.f);
 
@@ -184,7 +246,7 @@ void JellyPlatforms::KeyboardHold()
 	{
 		if (canJump) {
 			
-			vel.y += 15.f; //b2Vec2(0.f, 1.f);		
+			vel.y += 100.f * Timer::deltaTime; //b2Vec2(0.f, 1.f);		
 			if (!onGround) {
 				canJump = false;
 			}
@@ -192,16 +254,16 @@ void JellyPlatforms::KeyboardHold()
 	}
 	if (Input::GetKey(Key::A))
 	{
-		vel.x += -1.f; //b2Vec2(-1.f, 0.f);
+		vel.x += -Timer::deltaTime; //b2Vec2(-1.f, 0.f);
 	}
 	if (Input::GetKeyDown(Key::S))
 	{
-		vel.y += -1.f; //b2Vec2(0.f, -1.f);
+		vel.y += -Timer::deltaTime; //b2Vec2(0.f, -1.f);
 		player.GetBody()->SetLinearVelocity(speed * vel + b2Vec2(player.GetBody()->GetLinearVelocity().x * 0.9f, player.GetBody()->GetLinearVelocity().y));
 	}
 	if (Input::GetKey(Key::D))
 	{
-		vel.x += 1.f; //b2Vec2(1.f, 0.f);
+		vel.x += Timer::deltaTime; //b2Vec2(1.f, 0.f);
 	}
 	if (Input::GetKeyDown(Key::E)) 
 	{
