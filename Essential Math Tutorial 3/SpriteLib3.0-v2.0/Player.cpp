@@ -69,53 +69,31 @@ void Player::InitPlayer(std::string& fileName, std::string& animationJSON, int w
 
 	//death
 	m_animController->AddAnimation(animations["Explode"].get<Animation>());
+	m_animController->AddAnimation(animations["Explode"].get<Animation>());
 
 
 	//set default animation
-	m_animController->SetActiveAnim(IDLERIGHT);
+		m_animController->SetActiveAnim(IDLERIGHT);
 }
 
 void Player::Update()
 {
-	if (!m_locked)
+	if (!m_locked && !JellyPlatforms::dead)
 	{
 		MovementUpdate();
 	}
 
-	AnimationUpdate();
+	//if (!JellyPlatforms::dead) {
+		AnimationUpdate();
+	//}
 }
 
 void Player::MovementUpdate()
 {
 	m_moving = false;
 
-	if (m_hasPhysics)
+	if (m_hasPhysics && !JellyPlatforms::dead)
 	{
-		/*float speed = 10.f;
-		//vec3 vel = vec3(0.f, 0.f, 0.f);
-		b2Vec2 vel = b2Vec2(0.f, 0.f);
-
-		if (Input::GetKey(Key::Shift))
-		{
-			speed *= 3.f;
-		}*/
-		
-//#ifdef TOPDOWN
-		/*if (Input::GetKeyDown(Key::W) || Input::GetKeyDown(Key::Space))
-		{
-			//vel.y += 15.f;
-			//vel = vel + vec3(0.f, 1.f, 0.f);
-			//m_facing = UP;
-			m_moving = true;
-		}*/
-		if (Input::GetKey(Key::S))
-		{
-			//vel.y += -1.f;
-			//vel = vel + vec3(0.f, -1.f, 0.f);
-			//m_moving = true;
-
-		}
-//#endif
 
 		if (Input::GetKey(Key::A))
 		{
@@ -131,75 +109,27 @@ void Player::MovementUpdate()
 			m_facing = RIGHT;
 			m_moving = true;
 		}
-
-		//GetBody()->SetLinearVelocity(speed * vel + b2Vec2(player.GetBody()->GetLinearVelocity().x * 0.9f, player.GetBody()->GetLinearVelocity().y));
-		//m_physBody->SetVelocity(vel * speed);
-	}/*else {
-		//regular movement
-		float speed = 15.f;
-
-//#ifdef TOPDOWN
-		if (Input::GetKey(Key::W))
-		{
-			m_transform->SetPositionY(m_transform->GetPositionY() + (speed * Timer::deltaTime));
-			//m_facing = UP;
-			m_moving = true;
-		}
-		if (Input::GetKey(Key::S))
-		{
-			m_transform->SetPositionY(m_transform->GetPositionY() - (speed * Timer::deltaTime));
-			m_facing = DOWN;
-			m_moving = true;
-		}
-//#endif
-
-		if (Input::GetKey(Key::A))
-		{
-			m_transform->SetPositionX(m_transform->GetPositionX() - (speed * Timer::deltaTime));
-			m_facing = LEFT;
-			m_moving = true;
-		}
-
-		if (Input::GetKey(Key::D))
-		{
-			m_transform->SetPositionX(m_transform->GetPositionX() + (speed * Timer::deltaTime));
-			m_facing = RIGHT;
-			m_moving = true;
-		}
-
-	
-	}*/
-
-	
-
-	/*if (Input::GetKeyDown(Key::E))
-	{
-		m_moving = false;
-
-		if (m_facing == DOWN) {
-			m_attacking = false;
-		}
-		else {
-			m_attacking = true;
-			m_locked = true;
-		}
-		if (m_hasPhysics)
-		{
-			//m_physBody->SetVelocity(vec3());
-		}
-	}*/
+	}
 }
 
 void Player::AnimationUpdate()
 {
 	int activeAnimation = 0;
 
+	if (JellyPlatforms::dead)
+	{
+		activeAnimation = EXPLODE;
+		std::cout << "lol, you died\n\n\n";
+		
+	}
+	if (!JellyPlatforms::dead)
+	{
 	if (m_moving)
 	{
 		//puts it into WALK category
 		activeAnimation = WALK;
 	}
-	else if (m_attacking) {
+	/*else if (m_attacking) {
 
 		//check if attack animation is done
 		if (m_animController->GetAnimation(m_animController->GetActiveAnim()).GetAnimationDone())
@@ -216,7 +146,7 @@ void Player::AnimationUpdate()
 	else
 	{
 		activeAnimation = IDLE;
-	}
+	}*/
 
 	if (Input::GetKey(Key::W))
 	{
@@ -233,22 +163,17 @@ void Player::AnimationUpdate()
 		//SetActiveAnimation(IDLEDOWN);
 		//if (m_facing == LEFT) {
 		activeAnimation = CROUCH;
-			//}
+		//}
 	}
 
 	if (!JellyPlatforms::onGround) {
 		activeAnimation = JUMP;
 	}
-
-	if (JellyPlatforms::dead)
-	{
-		activeAnimation = EXPLODE;
-		std::cout << "lol, you died\n\n\n";
-	}
-
-	SetActiveAnimation(activeAnimation + (int)m_facing);
 }
 
+		SetActiveAnimation(activeAnimation + (int)m_facing);
+
+}
 void Player::SetActiveAnimation(int anim)
 {
 	m_animController->SetActiveAnim(anim);

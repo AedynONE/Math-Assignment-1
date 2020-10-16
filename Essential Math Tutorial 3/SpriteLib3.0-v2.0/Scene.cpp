@@ -81,7 +81,7 @@ void Scene::Update()
 
 void Scene::AdjustScrollOffset()
 {
-	float maxSizeX = 40;//ECS::GetComponent<Camera>(MainEntities::MainCamera()).GetOrthoSize().y;
+	float maxSizeX = 10;//ECS::GetComponent<Camera>(MainEntities::MainCamera()).GetOrthoSize().y;
 	float maxSizeY = 40;//ECS::GetComponent<Camera>(MainEntities::MainCamera()).GetOrthoSize().w;
 
 	float playerHalfSize = 0;//ECS::GetComponent<Sprite>(MainEntities::MainPlayer()).GetWidth() / 2.f;
