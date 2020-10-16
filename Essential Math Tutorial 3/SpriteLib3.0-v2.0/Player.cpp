@@ -1,4 +1,5 @@
 #include "Player.h"
+#include "JellyPlatforms.h"
 
 Player::Player()
 {
@@ -45,41 +46,33 @@ void Player::InitPlayer(std::string& fileName, std::string& animationJSON, int w
 	m_animController->AddAnimation(animations["IdleLeft"].get<Animation>());
 	//IdleRight
 	m_animController->AddAnimation(animations["IdleRight"].get<Animation>());
-#ifdef TOPDOWN
-	//IdleUp
-	m_animController->AddAnimation(animations["IdleUp"].get<Animation>());
-#endif
-	//IdleDown
-	m_animController->AddAnimation(animations["IdleDown"].get<Animation>());
+	//CrouchLeft
+	m_animController->AddAnimation(animations["CrouchLeft"].get<Animation>());
+	//CrouchRight
+	m_animController->AddAnimation(animations["CrouchRight"].get<Animation>());
 
 	//WALK ANIMATIONS\\
 
 	//WalkLeft
-	m_animController->AddAnimation(animations["WalkLeft"].get<Animation>());
+	m_animController->AddAnimation(animations["MoveLeft"].get<Animation>());
 	//WalkRight
-	m_animController->AddAnimation(animations["WalkRight"].get<Animation>());
-#ifdef TOPDOWN
-	//WalkUp
-	m_animController->AddAnimation(animations["WalkUp"].get<Animation>());
-	//WalkDown
-	m_animController->AddAnimation(animations["WalkDown"].get<Animation>());
-#endif
+	m_animController->AddAnimation(animations["MoveRight"].get<Animation>());
 
-	//ATTACK ANIMATIONS\\
+	//JUMP ANIMATIONS\\
 
-	//AttackLeft
-	m_animController->AddAnimation(animations["AttackLeft"].get<Animation>());
-	//AttackRight
-	m_animController->AddAnimation(animations["AttackRight"].get<Animation>());
-#ifdef TOPDOWN
-	//AttackUp
-	m_animController->AddAnimation(animations["AttackUp"].get<Animation>());
-	//AttackDown
-	m_animController->AddAnimation(animations["AttackDown"].get<Animation>());
-#endif
+	//jumpLeft
+	m_animController->AddAnimation(animations["JumpLeft"].get<Animation>());
+	//jumpRight
+	m_animController->AddAnimation(animations["JumpRight"].get<Animation>());
+
+	//DEATH\\
+
+	//death
+	m_animController->AddAnimation(animations["Explode"].get<Animation>());
+
 
 	//set default animation
-	m_animController->SetActiveAnim(IDLELEFT);
+	m_animController->SetActiveAnim(IDLERIGHT);
 }
 
 void Player::Update()
@@ -119,8 +112,8 @@ void Player::MovementUpdate()
 		{
 			//vel.y += -1.f;
 			//vel = vel + vec3(0.f, -1.f, 0.f);
-			m_facing = DOWN;
 			//m_moving = true;
+
 		}
 //#endif
 
@@ -177,13 +170,9 @@ void Player::MovementUpdate()
 	
 	}*/
 
-	if (Input::GetKeyDown(Key::S))
-	{
-		m_moving = false;
-		//SetActiveAnimation(IDLEDOWN);
-	}
+	
 
-	if (Input::GetKeyDown(Key::E))
+	/*if (Input::GetKeyDown(Key::E))
 	{
 		m_moving = false;
 
@@ -194,11 +183,11 @@ void Player::MovementUpdate()
 			m_attacking = true;
 			m_locked = true;
 		}
-		/*if (m_hasPhysics)
+		if (m_hasPhysics)
 		{
 			//m_physBody->SetVelocity(vec3());
-		}*/
-	}
+		}
+	}*/
 }
 
 void Player::AnimationUpdate()
@@ -211,14 +200,10 @@ void Player::AnimationUpdate()
 		activeAnimation = WALK;
 	}
 	else if (m_attacking) {
-		activeAnimation = ATTACK;
-		m_sprite->SetWidth(25);
-		m_sprite->SetHeight(32);
+
 		//check if attack animation is done
 		if (m_animController->GetAnimation(m_animController->GetActiveAnim()).GetAnimationDone())
 		{
-			m_sprite->SetWidth(20);
-			m_sprite->SetHeight(30);
 			//will auto set to IDLE
 			m_locked = false;
 			m_attacking = false;
@@ -231,6 +216,34 @@ void Player::AnimationUpdate()
 	else
 	{
 		activeAnimation = IDLE;
+	}
+
+	if (Input::GetKey(Key::W))
+	{
+		m_moving = false;
+		//SetActiveAnimation(IDLEDOWN);
+		//if (m_facing == LEFT) {
+		activeAnimation = JUMP;
+		//}
+	}
+
+	if (Input::GetKey(Key::S))
+	{
+		m_moving = false;
+		//SetActiveAnimation(IDLEDOWN);
+		//if (m_facing == LEFT) {
+		activeAnimation = CROUCH;
+			//}
+	}
+
+	if (!JellyPlatforms::onGround) {
+		activeAnimation = JUMP;
+	}
+
+	if (JellyPlatforms::dead)
+	{
+		activeAnimation = EXPLODE;
+		std::cout << "lol, you died\n\n\n";
 	}
 
 	SetActiveAnimation(activeAnimation + (int)m_facing);

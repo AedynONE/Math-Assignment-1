@@ -18,8 +18,9 @@ public:
 	void KeyboardDown() override;
 	void KeyboardUp() override;
 
+	static bool dead;
+	static bool onGround;
 protected:
-	bool onGround = false;
 	bool canJump = false;
 	int platform = 0;
 	bool movingRight = true;
